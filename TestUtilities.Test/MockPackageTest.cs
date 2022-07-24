@@ -3,6 +3,7 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 using Xunit;
+using YadaYadaSoftware.TestUtilities;
 
 namespace TestUtilities.Test;
 

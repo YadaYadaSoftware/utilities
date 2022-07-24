@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 
-namespace TestUtilities;
+namespace YadaYadaSoftware.TestUtilities;
 
 public class TestServerHelper
 {

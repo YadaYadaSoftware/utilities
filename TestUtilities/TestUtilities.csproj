@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	  <RootNamespace>YadaYadaSoftware.TestUtilities</RootNamespace>
+	  <RootNamespace>YadaYada.TestUtilities</RootNamespace>
 	  <RepositoryUrl>https://github.com/hounddog22030/utilities.git</RepositoryUrl>
 	  <AssemblyName>$(RootNamespace)</AssemblyName>
   </PropertyGroup>

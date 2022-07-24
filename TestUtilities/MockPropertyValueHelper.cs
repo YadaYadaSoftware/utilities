@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace TestUtilities;
+namespace YadaYadaSoftware.TestUtilities;
 
 public static class MockPropertyValueHelper
 {

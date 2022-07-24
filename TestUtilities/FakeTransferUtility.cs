@@ -1,7 +1,7 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Transfer;
 
-namespace TestUtilities;
+namespace YadaYadaSoftware.TestUtilities;
 
 public class FakeTransferUtility : ITransferUtility
 {

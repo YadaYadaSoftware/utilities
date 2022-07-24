@@ -17,7 +17,7 @@ using IServiceProvider = System.IServiceProvider;
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 
-namespace TestUtilities;
+namespace YadaYadaSoftware.TestUtilities;
 
 public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceCollection, ISupportRequiredService where TTarget : class
 {
