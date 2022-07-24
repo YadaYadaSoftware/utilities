@@ -1,15 +1,15 @@
-﻿using Amazon.S3;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System.Collections;
+﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Amazon.S3;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Language.Flow;
 using IServiceProvider = System.IServiceProvider;
@@ -17,7 +17,7 @@ using IServiceProvider = System.IServiceProvider;
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 
-namespace YadaYada.TestUtilities;
+namespace TestUtilities;
 
 public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceCollection, ISupportRequiredService where TTarget : class
 {

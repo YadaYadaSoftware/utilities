@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 
-namespace YadaYada.TestUtilities;
+namespace TestUtilities;
 
 public class TestServerHelper
 {
