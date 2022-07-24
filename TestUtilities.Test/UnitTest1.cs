@@ -1,10 +1,6 @@
-
-using System;
-using System.Runtime.CompilerServices;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Moq;
-using Xunit;
+using System.Runtime.CompilerServices;
 using YadaYada.TestUtilities;
 
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
