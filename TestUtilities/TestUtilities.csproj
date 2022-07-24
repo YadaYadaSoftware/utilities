@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	  <RepositoryUrl>https://github.com/hounddog22030/utilities.git</RepositoryUrl>
+	  <AssemblyName>YadaYadaSoftware.$(RootNamespace)</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
