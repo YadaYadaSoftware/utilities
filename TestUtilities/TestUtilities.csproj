@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
 	  <RootNamespace>YadaYada.TestUtilities</RootNamespace>
 	  <RepositoryUrl>https://github.com/hounddog22030/utilities.git</RepositoryUrl>
-	  <AssemblyName>$(RootNamespace)</AssemblyName>
+	  <AssemblyName>YadaYadaSoftware.TestUtilities</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
