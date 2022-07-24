@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace YadaYadaSoftware.TestUtilities;
+namespace YadaYada.TestUtilities;
 
 public static class ActionResultExtension
 {

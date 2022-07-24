@@ -5,7 +5,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
-using YadaYadaSoftware.TestUtilities;
+using YadaYada.TestUtilities;
 
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 

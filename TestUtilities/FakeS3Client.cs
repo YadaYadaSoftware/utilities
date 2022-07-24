@@ -2,7 +2,7 @@
 using Amazon.S3;
 using Amazon.S3.Model;
 
-namespace YadaYadaSoftware.TestUtilities;
+namespace YadaYada.TestUtilities;
 
 public class FakeS3Client : IAmazonS3
 {
