@@ -75,7 +75,7 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
         }
         else
         {
-            var constructorInfos = mockOfType.GetConstructors(BindingFlags.CreateInstance|BindingFlags.Instance|BindingFlags.NonPublic|BindingFlags.Public).OrderByDescending(z => z.GetParameters().Length);
+            var constructorInfos = mockOfType.GetConstructors(BindingFlags.CreateInstance|BindingFlags.Instance|BindingFlags.NonPublic|BindingFlags.Public).OrderByDescending(z => z.GetParameters().Length).ThenByDescending(_=>_.GetCustomAttributes<PreferredMockConstructorAttribute>().Count());
 
             if (constructorInfos.Any())
             {
@@ -454,6 +454,12 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
     }
 
 }
+
+[AttributeUsage(AttributeTargets.Constructor)]
+public class PreferredMockConstructorAttribute : Attribute
+{
+}
+
 public class MockPackage<TTarget, TMock0> : MockPackage<TTarget> where TMock0 : class where TTarget : class
 {
 
