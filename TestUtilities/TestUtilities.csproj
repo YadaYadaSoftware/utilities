@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	  <RootNamespace>YadaYada.TestUtilities</RootNamespace>
-	  <RepositoryUrl>https://github.com/hounddog22030/utilities.git</RepositoryUrl>
+	  <RepositoryUrl>https://github.com/yadayadasoftware/utilities.git</RepositoryUrl>
 	  <AssemblyName>YadaYadaSoftware.TestUtilities</AssemblyName>
   </PropertyGroup>
 
