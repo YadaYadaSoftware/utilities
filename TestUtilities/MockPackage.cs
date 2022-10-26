@@ -24,6 +24,11 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
 
     public object activateLock = new object();
 
+    public MockPackage(Func<Mock<TTarget>> targetMock)
+    {
+        this.AddMock(typeof(TTarget), targetMock.Invoke());
+    }
+
     public MockPackage(params KeyValuePair<Type, object>[] fakes)
     {
         var serviceScopeFactory = this.GetMock<IServiceScopeFactory>();
@@ -283,30 +288,6 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
     {
         return (Mock<TMock>)this.GetMock(typeof(TMock));
 
-        //ServiceDescriptor descriptor = this._descriptors.SingleOrDefault(d => d.ServiceType == typeof(TMock));
-
-
-        //if (descriptor == null)
-        //{
-        //    var mock = this.CreateMock(typeof(TMock));
-        //    mock.CallBase = true;
-        //    this.AddMock(typeof(TMock), mock);
-        //}
-
-        //descriptor = this._descriptors.SingleOrDefault(d => d.ServiceType == typeof(TMock));
-
-        ////return Mock<IServiceScopeFactory>.Get((IServiceScopeFactory)descriptor.ImplementationInstance);
-
-        //return Mock<TMock>.Get((TMock) descriptor.ImplementationInstance);
-
-        ////Type mockedType = typeof(Mock<>);
-        ////var makeGenericType = mockedType.MakeGenericType(mockedType);
-
-        ////Mock returnValue = (Mock)makeGenericType.InvokeMember("Get", BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, new object[] { descriptor.ImplementationInstance });
-
-
-
-        ////return returnValue;
     }
 
     public object GetFake(Type fakeType)

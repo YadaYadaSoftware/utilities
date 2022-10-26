@@ -1,6 +1,7 @@
 ﻿using Amazon.S3;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using YadaYada.TestUtilities;
 
 namespace TestUtilities.Test;
@@ -18,6 +19,35 @@ public class MockPackageTest
 
     public class MyTestClass
     { }
+
+    [Fact]
+    public void FactoryTest()
+    {
+        const string myValue = "MyValue";
+
+        using var p = new MockPackage<MyTestClass2>(() => new Mock<MyTestClass2>(myValue));
+
+        
+
+        p.Target.Value.Should().Be(myValue);
+    }
+
+
+    private void Factory()
+    {
+        throw new NotImplementedException();
+    }
+
+
+    public class MyTestClass2
+    {
+        public string Value { get; }
+
+        public MyTestClass2(string value)
+        {
+            Value = value;
+        }
+    }
 
         
 }
