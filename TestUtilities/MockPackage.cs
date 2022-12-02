@@ -434,6 +434,11 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
         return this.TargetMock.Setup(expression);
     }
 
+    public ISetup<TTarget> Setup(Expression<Action<TTarget>> expression)
+    {
+        return this.TargetMock.Setup(expression);
+    }
+
 }
 
 [AttributeUsage(AttributeTargets.Constructor)]
