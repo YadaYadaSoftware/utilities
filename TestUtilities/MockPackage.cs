@@ -420,18 +420,18 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
         set => this._descriptors[index] = value;
     }
 
-    public ISetup<T, TResult> Setup<T, TResult>(Expression<Func<T, TResult>> expression) where T : class
+    public ISetup<TTarget, TResult> Setup<TResult>(Expression<Func<TTarget, TResult>> expression)
     {
-        return this.GetMock<T>().Setup(expression);
+        return this.TargetMock.Setup(expression);
     }
 
-    public ISetup<T, Task<TResult>> SetupAsync<T, TResult>(Expression<Func<T, TResult>> expression) where T : class
+    public ISetup<TTarget, Task<TResult>> SetupAsync<TResult>(Expression<Func<TTarget, TResult>> expression)
     {
-        return (ISetup<T, Task<TResult>>)this.GetMock<T>().Setup(expression);
+        return (ISetup<TTarget, Task<TResult>>)this.TargetMock.Setup(expression);
     }
-    public ISetup<T, ValueTask<TResult>> SetupValueAsync<T, TResult>(Expression<Func<T, ValueTask<TResult>>> expression) where T : class
+    public ISetup<TTarget, ValueTask<TResult>> SetupValueAsync<TResult>(Expression<Func<TTarget, ValueTask<TResult>>> expression)
     {
-        return (ISetup<T, ValueTask<TResult>>)this.GetMock<T>().Setup(expression);
+        return this.TargetMock.Setup(expression);
     }
 
 }
