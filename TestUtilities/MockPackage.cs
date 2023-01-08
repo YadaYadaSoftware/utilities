@@ -82,16 +82,7 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
         {
             var constructorInfos = mockOfType.GetConstructors(BindingFlags.CreateInstance|BindingFlags.Instance|BindingFlags.NonPublic|BindingFlags.Public).OrderByDescending(z => z.GetParameters().Length).ThenByDescending(_=>_.GetCustomAttributes<PreferredMockConstructorAttribute>().Count());
 
-            if (constructorInfos.Any())
-            {
-                foreach (var constructorInfo in constructorInfos)
-                {
-                    returnValue = this.ConstructFrom(constructorInfo, mockType);
-                    if (returnValue is {}) break;
-                }
-
-            }
-            else
+            if (!constructorInfos.Any())
             {
                 lock (activateLock)
                 {
@@ -99,6 +90,12 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
                 }
             }
 
+            foreach (var constructorInfo in constructorInfos)
+            {
+                if (constructorInfo.GetParameters().Any(p=>p.ParameterType.IsPrimitive || p.ParameterType == typeof(string))) continue;
+                returnValue = this.ConstructFrom(constructorInfo, mockType);
+                if (returnValue is { }) break;
+            }
         }
 
         foreach (var propertyInfo in mockOfType.GetProperties().Where(_=>_.GetCustomAttribute<InjectAttribute>() is {}))
@@ -448,57 +445,33 @@ public class PreferredMockConstructorAttribute : Attribute
 
 public class MockPackage<TTarget, TMock0> : MockPackage<TTarget> where TMock0 : class where TTarget : class
 {
-
-    public Mock<TMock0> ContextMock => this.GetMock<TMock0>();
-    public TMock0 Context
-    {
-        get
-        {
-            if (this._descriptors.SingleOrDefault(_ => _.ServiceType == typeof(TMock0)) is { } serviceDescriptor)
-            {
-                return (TMock0)serviceDescriptor.ImplementationInstance;
-
-            }
-            return this.ContextMock.Object;
-        }
-    }
-
-    public MockPackage(TMock0 context = null) : base(new KeyValuePair<Type, object>[] { new KeyValuePair<Type, object>(typeof(TMock0), context) })
+    public MockPackage(TMock0 mock0) : base(new KeyValuePair<Type, object>[] { new KeyValuePair<Type, object>(typeof(TMock0), mock0) })
     {
 
     }
-
 }
 
 
-public class MockPackage<TTarget, TContext, TMock1> : MockPackage<TTarget, TContext> where TTarget : class where TContext : DbContext
+public class MockPackage<TTarget, TMock0, TMock1> : MockPackage<TTarget, TMock0> where TTarget : class where TMock0 : class where TMock1 : class
 {
-    public MockPackage(TContext context = null, TMock1 mock1 = default) : base(context)
+    public MockPackage(TMock0 mock0, TMock1 mock1) : base(mock0)
     {
         this._descriptors.Add(new ServiceDescriptor(typeof(TMock1), mock1));
     }
 }
-public class MockPackage<TTarget, TContext, TMock1, TMock2> : MockPackage<TTarget, TContext, TMock1> where TTarget : class where TContext : DbContext
+public class MockPackage<TTarget, TMock0, TMock1, TMock2> : MockPackage<TTarget, TMock0, TMock1> where TTarget : class where TMock0 : class where TMock1 : class where TMock2 : class
 {
-    public MockPackage(TContext context = null, TMock1 mock1 = default, TMock2 mock2 = default) : base(context, mock1)
+    public MockPackage(TMock0 mock0, TMock1 mock1, TMock2 mock2) : base(mock0, mock1)
     {
-        this._descriptors.Add(new ServiceDescriptor(typeof(TMock2), mock2));
+        this._descriptors.Add(new ServiceDescriptor(typeof(TMock1), mock2));
 
     }
 }
-public class MockPackage<TTarget, TContext, TMock1, TMock2, TMock3> : MockPackage<TTarget, TContext, TMock1, TMock2> where TTarget : class where TContext : DbContext
+public class MockPackage<TTarget, TMock0, TMock1, TMock2, TMock3> : MockPackage<TTarget, TMock0, TMock1, TMock2> where TTarget : class where TMock0 : class where TMock1 : class where TMock2 : class where TMock3 : class
 {
-    public MockPackage(TContext context = null, TMock1 mock1 = default, TMock2 mock2 = default, TMock3 mock3 = default) : base(context, mock1, mock2)
+    public MockPackage(TMock0 mock0, TMock1 mock1, TMock2 mock2, TMock3 mock3) : base(mock0, mock1, mock2)
     {
-        this._descriptors.Add(new ServiceDescriptor(typeof(TMock3), mock3));
-
-    }
-}
-public class MockPackage<TTarget, TContext, TMock1, TMock2, TMock3, TMock4> : MockPackage<TTarget, TContext, TMock1, TMock2, TMock3> where TTarget : class where TContext : DbContext
-{
-    public MockPackage(TContext context = null, TMock1 mock1 = default, TMock2 mock2 = default, TMock3 mock3 = default, TMock4 mock4 = default) : base(context, mock1, mock2, mock3)
-    {
-        this._descriptors.Add(new ServiceDescriptor(typeof(TMock4), mock4));
+        this._descriptors.Add(new ServiceDescriptor(typeof(TMock1), mock3));
 
     }
 }

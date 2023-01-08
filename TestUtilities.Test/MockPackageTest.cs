@@ -49,5 +49,30 @@ public class MockPackageTest
         }
     }
 
+    [Fact]
+    public void StringCtorTest()
+    {
+        using var p = new MockPackage<ClassWithStringInOneCtor>();
+        p.TargetMock.Should().NotBeNull();
+    }
+
+    public class ClassWithStringInOneCtor
+    {
+        public ClassWithStringInOneCtor(string myString, string myString2)
+        {
+            
+        }
+
+        public ClassWithStringInOneCtor(AnotherClassToInject anotherClassToInject)
+        {
+            
+        }
+    }
+
+    public class AnotherClassToInject
+    {
+
+    }
+
         
 }
