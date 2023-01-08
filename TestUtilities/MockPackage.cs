@@ -24,7 +24,7 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
 
     public object activateLock = new object();
 
-    public MockPackage(Func<Mock<TTarget>> targetMock)
+    public MockPackage(Func<Mock<TTarget>?> targetMock)
     {
         this.AddMock(typeof(TTarget), targetMock.Invoke());
     }
@@ -64,10 +64,10 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
         }
     }
 
-    private Mock CreateMock(Type mockOfType)
+    private Mock? CreateMock(Type mockOfType)
     {
 
-        Mock returnValue = null;
+        Mock? returnValue = null;
 
         var mockType = typeof(Mock<>).MakeGenericType(mockOfType);
 
@@ -82,34 +82,45 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
         {
             var constructorInfos = mockOfType.GetConstructors(BindingFlags.CreateInstance|BindingFlags.Instance|BindingFlags.NonPublic|BindingFlags.Public).OrderByDescending(z => z.GetParameters().Length).ThenByDescending(_=>_.GetCustomAttributes<PreferredMockConstructorAttribute>().Count());
 
+
+            // ReSharper disable once PossibleMultipleEnumeration
             if (!constructorInfos.Any())
             {
                 lock (activateLock)
                 {
-                    return (Mock) Activator.CreateInstance(mockType);
+                    return (Mock) Activator.CreateInstance(mockType)!;
                 }
             }
 
+            var i = 0;
+
             foreach (var constructorInfo in constructorInfos)
             {
+                i++;
                 if (constructorInfo.GetParameters().Any(p=>p.ParameterType.IsPrimitive || p.ParameterType == typeof(string))) continue;
                 returnValue = this.ConstructFrom(constructorInfo, mockType);
                 if (returnValue is { }) break;
+                // ReSharper disable once PossibleMultipleEnumeration
+                if (i==constructorInfos.Count()) throw new InvalidOperationException($"Cannot find a ctor for {mockOfType}");
             }
         }
 
+        ArgumentNullException.ThrowIfNull(returnValue,nameof(returnValue));
+
         foreach (var propertyInfo in mockOfType.GetProperties().Where(_=>_.GetCustomAttribute<InjectAttribute>() is {}))
         {
-            propertyInfo.SetValue(returnValue.Object, this.GetMock(propertyInfo.PropertyType).Object);
+            var mock = this.GetMock(propertyInfo.PropertyType);
+            ArgumentNullException.ThrowIfNull(mock);
+            propertyInfo.SetValue(returnValue.Object, mock.Object);
         }
 
         return returnValue;
 
     }
 
-    private Mock ConstructFrom(ConstructorInfo constructorInfo, Type mockType)
+    private Mock? ConstructFrom(ConstructorInfo constructorInfo, Type mockType)
     {
-        Mock returnValue = null;
+        Mock? returnValue = null;
         var parameterInfos = constructorInfo.GetParameters();
 
         var arguments = new List<object>();
@@ -246,9 +257,9 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
     public TTarget Target => this.TargetMock.Object;
 
     protected readonly IServiceCollection _descriptors = new ServiceCollection();
-    private readonly Dictionary<Type, Mock> _mocks = new Dictionary<Type, Mock>();
+    private readonly Dictionary<Type, Mock?> _mocks = new Dictionary<Type, Mock?>();
 
-    public void AddMock(Type mockOf, Mock mock)
+    public void AddMock(Type mockOf, Mock? mock)
     {
         this._descriptors.Add(new ServiceDescriptor(mockOf, mock.Object));
         this._mocks.Add(mockOf, mock);
@@ -262,7 +273,7 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
 
 
 
-    public Mock GetMock([NotNull] Type mockType)
+    public Mock? GetMock([NotNull] Type mockType)
     {
         if (mockType == null) throw new ArgumentNullException(nameof(mockType));
 
