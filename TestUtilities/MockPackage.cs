@@ -462,7 +462,7 @@ public class MockPackage<TTarget, TMock0, TMock1, TMock2> : MockPackage<TTarget,
 {
     public MockPackage(TMock0 mock0, TMock1 mock1, TMock2 mock2) : base(mock0, mock1)
     {
-        this._descriptors.Add(new ServiceDescriptor(typeof(TMock1), mock2));
+        this._descriptors.Add(new ServiceDescriptor(typeof(TMock2), mock2));
 
     }
 }
@@ -470,7 +470,32 @@ public class MockPackage<TTarget, TMock0, TMock1, TMock2, TMock3> : MockPackage<
 {
     public MockPackage(TMock0 mock0, TMock1 mock1, TMock2 mock2, TMock3 mock3) : base(mock0, mock1, mock2)
     {
-        this._descriptors.Add(new ServiceDescriptor(typeof(TMock1), mock3));
+        this._descriptors.Add(new ServiceDescriptor(typeof(TMock3), mock3));
+
+    }
+}
+public class MockPackage<TTarget, TMock0, TMock1, TMock2, TMock3, TMock4> : MockPackage<TTarget, TMock0, TMock1, TMock2, TMock3> where TTarget : class where TMock0 : class where TMock1 : class where TMock2 : class where TMock3 : class where TMock4 : class
+{
+    public MockPackage(TMock0 mock0, TMock1 mock1, TMock2 mock2, TMock3 mock3, TMock4 mock4) : base(mock0, mock1, mock2, mock3)
+    {
+        this._descriptors.Add(new ServiceDescriptor(typeof(TMock4), mock4));
+
+    }
+}
+
+public class MockPackage<TTarget, TMock0, TMock1, TMock2, TMock3, TMock4, TMock5> : MockPackage<TTarget, TMock0, TMock1, TMock2, TMock3, TMock4> where TTarget : class where TMock0 : class where TMock1 : class where TMock2 : class where TMock3 : class where TMock4 : class where TMock5 : class
+{
+    public MockPackage(TMock0 mock0, TMock1 mock1, TMock2 mock2, TMock3 mock3, TMock4 mock4, TMock5 mock5) : base(mock0, mock1, mock2, mock3, mock4)
+    {
+        this._descriptors.Add(new ServiceDescriptor(typeof(TMock5), mock5));
+
+    }
+}
+public class MockPackage<TTarget, TMock0, TMock1, TMock2, TMock3, TMock4, TMock5, TMock6> : MockPackage<TTarget, TMock0, TMock1, TMock2, TMock3, TMock4, TMock5> where TTarget : class where TMock0 : class where TMock1 : class where TMock2 : class where TMock3 : class where TMock4 : class where TMock5 : class where TMock6 : class
+{
+    public MockPackage(TMock0 mock0, TMock1 mock1, TMock2 mock2, TMock3 mock3, TMock4 mock4, TMock5 mock5, TMock6 mock6) : base(mock0, mock1, mock2, mock3, mock4, mock5)
+    {
+        this._descriptors.Add(new ServiceDescriptor(typeof(TMock6), mock6));
 
     }
 }
