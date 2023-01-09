@@ -29,7 +29,7 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
         this.AddMock(typeof(TTarget), targetMock.Invoke());
     }
 
-    public MockPackage(params KeyValuePair<Type, object>[] fakes)
+    public MockPackage(params KeyValuePair<Type, object>[]? fakes)
     {
         var serviceScopeFactory = this.GetMock<IServiceScopeFactory>();
         var scope = this.GetMock<IServiceScope>();
@@ -41,28 +41,16 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
         loggingProvider.Setup(_ => _.CreateLogger(It.IsAny<string>())).Returns(mockLogger.Object);
         var factory = this.GetMock<ILoggerFactory>();
         factory.Setup(_ => _.CreateLogger(It.IsAny<string>())).Returns(mockLogger.Object);
-        if (fakes != null)
+        if (fakes == null) return;
+
+        foreach (var (key, value) in fakes)
         {
-            foreach (var (key, value) in fakes)
-            {
-                if (value == default)
-                {
-                    //var mockType = typeof(Mock<>).MakeGenericType(key);
-                    //Mock mock = (Mock) Activator.CreateInstance(mockType);
-                    //this._mocks.Add(key, mock);
-                    ////var x = (Activator.CreateInstance(mockType) as Mock).Object;
-
-                    this.GetMock(key);
-
-                }
-                else
-                {
-                    this._descriptors.Add(new ServiceDescriptor(key, value));
-
-                }
-            }
+            this._descriptors.Add(new ServiceDescriptor(key, value));
         }
     }
+
+    public DbContext? Context => _descriptors.SingleOrDefault(descriptor => descriptor.ImplementationType is {} d && d.IsAssignableTo(typeof(DbContext)))?.ImplementationInstance as DbContext;
+    
 
     private Mock? CreateMock(Type mockOfType)
     {
