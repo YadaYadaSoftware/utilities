@@ -6,7 +6,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Amazon.S3;
 using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -48,9 +47,6 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
             this._descriptors.Add(new ServiceDescriptor(key, value));
         }
     }
-
-    public DbContext? Context => _descriptors.SingleOrDefault(descriptor => descriptor.ImplementationType is {} d && d.IsAssignableTo(typeof(DbContext)))?.ImplementationInstance as DbContext;
-    
 
     private Mock? CreateMock(Type mockOfType)
     {
