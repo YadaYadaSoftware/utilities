@@ -79,17 +79,32 @@ public class MockPackageTest
         p.Target.Log();
     }
 
+    [Fact]
+    public void SetupMock2Test()
+    {
+        using var p = new MockPackage<LoggerClass>();
+        p.SetupMock<ILoggerFactory>(mock => mock.CreateLogger(It.IsAny<string>())).Verifiable();
+        p.Target.CreateLogger();
+    }
+
     public class LoggerClass
     {
         private readonly ILogger _logger;
+        private readonly ILoggerFactory _loggerFactory;
 
-        public LoggerClass(ILogger logger)
+        public LoggerClass(ILogger logger, ILoggerFactory loggerFactory)
         {
             _logger = logger;
+            _loggerFactory = loggerFactory;
         }
         public void Log()
         {
             _logger.BeginScope("x");
+        }
+
+        public ILogger CreateLogger()
+        {
+            return _loggerFactory.CreateLogger("x");
         }
     }
 
