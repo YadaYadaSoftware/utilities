@@ -1,6 +1,7 @@
 ﻿using Amazon.S3;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 using YadaYada.TestUtilities;
 
@@ -8,6 +9,25 @@ namespace TestUtilities.Test;
 
 public class MockPackageTest
 {
+    public class ClassWithStringInOneCtor
+    {
+        public ClassWithStringInOneCtor(string myString, string myString2)
+        {
+
+        }
+
+        public ClassWithStringInOneCtor(AnotherClassToInject anotherClassToInject)
+        {
+
+        }
+    }
+
+    public class AnotherClassToInject
+    {
+
+    }
+
+
     [Fact]
     public void ReplacementTest()
     {
@@ -19,6 +39,16 @@ public class MockPackageTest
 
     public class MyTestClass
     { }
+
+    public class MyTestClass2
+    {
+        public string Value { get; }
+
+        public MyTestClass2(string value)
+        {
+            Value = value;
+        }
+    }
 
     [Fact]
     public void FactoryTest()
@@ -33,21 +63,6 @@ public class MockPackageTest
     }
 
 
-    private void Factory()
-    {
-        throw new NotImplementedException();
-    }
-
-
-    public class MyTestClass2
-    {
-        public string Value { get; }
-
-        public MyTestClass2(string value)
-        {
-            Value = value;
-        }
-    }
 
     [Fact]
     public void StringCtorTest()
@@ -56,23 +71,28 @@ public class MockPackageTest
         p.TargetMock.Should().NotBeNull();
     }
 
-    public class ClassWithStringInOneCtor
+    [Fact]
+    public void SetupMockTest()
     {
-        public ClassWithStringInOneCtor(string myString, string myString2)
-        {
-            
-        }
+        using var p = new MockPackage<LoggerClass>();
+        p.SetupMock<ILogger>(mock => mock.BeginScope("x")).Verifiable();
+        p.Target.Log();
+    }
 
-        public ClassWithStringInOneCtor(AnotherClassToInject anotherClassToInject)
+    public class LoggerClass
+    {
+        private readonly ILogger _logger;
+
+        public LoggerClass(ILogger logger)
         {
-            
+            _logger = logger;
+        }
+        public void Log()
+        {
+            _logger.BeginScope("x");
         }
     }
 
-    public class AnotherClassToInject
-    {
-
-    }
 
         
 }

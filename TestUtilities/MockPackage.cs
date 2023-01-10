@@ -431,11 +431,13 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
         return this.TargetMock.Setup(expression);
     }
 
-    public ISetup<TMock, TResult> SetupMock<TMock, TResult>(Expression<Func<TMock, TResult>> expression) where TMock : class
+    public ISetup<TMock> SetupMock<TMock>(Expression<Action<TMock>> expression) where TMock : class
     {
         var mock = this.GetMock<TMock>();
         return mock.Setup(expression);
     }
+
+
 
 }
 
