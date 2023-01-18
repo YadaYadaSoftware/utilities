@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using Moq.Language.Flow;
 using IServiceProvider = System.IServiceProvider;
@@ -440,6 +441,13 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
     {
         Mock<TMock> mock = this.GetMock<TMock>();
         return mock.Setup(expression);
+    }
+
+    public void Configure<T>(FileInfo appSettings) where T : class
+    {
+        var x = new ServiceCollection();
+        var configuration = new ConfigurationBuilder().AddJsonFile(appSettings.FullName, false).Build();
+        this.Configure<T>(configuration);
     }
 
 

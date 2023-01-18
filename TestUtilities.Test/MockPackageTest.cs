@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using YadaYada.TestUtilities;
 
@@ -106,6 +107,14 @@ public class MockPackageTest
         {
             return _loggerFactory.CreateLogger("x");
         }
+    }
+
+    [Fact]
+    public void ConfigureTest()
+    {
+        using var p = new MockPackage<MyTestClass>();
+        p.Configure<MyTestClass>(new FileInfo("appsettings.for.test.json"));
+        p.GetService<IOptions<MyTestClass>>().Should().NotBeNull();
     }
 
 
