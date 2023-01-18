@@ -443,13 +443,18 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
         return mock.Setup(expression);
     }
 
-    public void Configure<T>(FileInfo appSettings) where T : class
+    public void Configure<T>(FileInfo appSettings, string? sectionName = null) where T : class
     {
+        if (sectionName is null)
+        {
+            sectionName = typeof(T).Name;
+        }
         var serviceCollection = new ServiceCollection();
         var configuration = new ConfigurationBuilder().AddJsonFile(appSettings.FullName, false).Build();
-        serviceCollection.Configure<T>(configuration);
+        serviceCollection.Configure<T>(configuration.GetSection(sectionName));
         var provider = serviceCollection.BuildServiceProvider();
         var options = provider.GetService<IOptions<T>>();
+        ArgumentNullException.ThrowIfNull(options);
         Add(new ServiceDescriptor(typeof(IOptions<T>), options));
 
     }
