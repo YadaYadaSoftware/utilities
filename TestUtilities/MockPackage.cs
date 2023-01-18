@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -338,16 +339,15 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
     public object GetService(Type serviceType)
     {
         var descriptor = this._descriptors.SingleOrDefault(d => d.ServiceType == serviceType);
+
         if (descriptor == null)
         {
-            //Mock mock = this.GetMock(serviceType);
-
-            //this.AddMock(serviceType, mock);
             this.GetMock(serviceType);
-
         }
 
-        return this._descriptors.Single(d => d.ServiceType == serviceType).ImplementationInstance;
+        var implementationInstance = this._descriptors.Single(d => d.ServiceType == serviceType).ImplementationInstance;
+        ArgumentNullException.ThrowIfNull(implementationInstance);
+        return implementationInstance;
     }
 
     public object GetRequiredService(Type serviceType)
@@ -445,9 +445,13 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
 
     public void Configure<T>(FileInfo appSettings) where T : class
     {
-        var x = new ServiceCollection();
+        var serviceCollection = new ServiceCollection();
         var configuration = new ConfigurationBuilder().AddJsonFile(appSettings.FullName, false).Build();
-        this.Configure<T>(configuration);
+        serviceCollection.Configure<T>(configuration);
+        var provider = serviceCollection.BuildServiceProvider();
+        var options = provider.GetService<IOptions<T>>();
+        Add(new ServiceDescriptor(typeof(IOptions<T>), options));
+
     }
 
 

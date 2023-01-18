@@ -114,9 +114,10 @@ public class MockPackageTest
     {
         using var p = new MockPackage<MyTestClass>();
         p.Configure<MyTestClass>(new FileInfo("appsettings.for.test.json"));
-        p.GetService<IOptions<MyTestClass>>().Should().NotBeNull();
+        var options = p.GetService<IOptions<MyTestClass>>();
+
     }
 
 
-        
+
 }
