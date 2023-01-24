@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Amazon.S3;
+using FluentAssertions;
+using FluentAssertions.Events;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -445,10 +447,7 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
 
     public void Configure<T>(FileInfo appSettings, string? sectionName = null) where T : class
     {
-        if (sectionName is null)
-        {
-            sectionName = typeof(T).Name;
-        }
+        sectionName ??= typeof(T).Name;
         var serviceCollection = new ServiceCollection();
         var configuration = new ConfigurationBuilder().AddJsonFile(appSettings.FullName, false).Build();
         serviceCollection.Configure<T>(configuration.GetSection(sectionName));
@@ -456,11 +455,15 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
         var options = provider.GetService<IOptions<T>>();
         ArgumentNullException.ThrowIfNull(options);
         Add(new ServiceDescriptor(typeof(IOptions<T>), options));
-
     }
 
-
-
+    public IMonitor<TTarget> Monitor => this.Target.Monitor();
+    public IMonitor<TTarget> ShouldRaise(string eventName, string because = "", params object[] becauseArgs)
+    {
+        var shouldRaise = this.Target.Monitor();
+        shouldRaise.Should().Raise(eventName, because, becauseArgs);
+        return shouldRaise;
+    }
 }
 
 [AttributeUsage(AttributeTargets.Constructor)]
