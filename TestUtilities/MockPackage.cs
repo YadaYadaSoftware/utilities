@@ -232,11 +232,14 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
         get
         {
             var targetMock = this.GetMock<TTarget>();
+
             if (targetMock == null)
             {
                 targetMock = this.CreateMock<TTarget>();
                 this.AddMock(typeof(TTarget), targetMock);
             }
+
+            this.Monitor = targetMock.Object.Monitor();
 
             return targetMock;
         }
@@ -246,6 +249,7 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
 
     protected readonly IServiceCollection _descriptors = new ServiceCollection();
     private readonly Dictionary<Type, Mock?> _mocks = new Dictionary<Type, Mock?>();
+    private IMonitor<TTarget>? _monitor;
 
     public void AddMock(Type mockOf, Mock? mock)
     {
@@ -280,7 +284,7 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
 
     }
 
-    public Mock<TMock> GetMock<TMock>() where TMock : class
+    public Mock<TMock>? GetMock<TMock>() where TMock : class
     {
         return (Mock<TMock>)this.GetMock(typeof(TMock));
 
@@ -457,12 +461,15 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
         Add(new ServiceDescriptor(typeof(IOptions<T>), options));
     }
 
-    public IMonitor<TTarget> Monitor => this.Target.Monitor();
-    public IMonitor<TTarget> ShouldRaise(string eventName, string because = "", params object[] becauseArgs)
+    public IMonitor<TTarget> Monitor
     {
-        var shouldRaise = this.Target.Monitor();
-        shouldRaise.Should().Raise(eventName, because, becauseArgs);
-        return shouldRaise;
+        get => _monitor ??= this.Target.Monitor();
+        private set => _monitor = value;
+    }
+
+    public IEventRecording ShouldRaise(string eventName, string because = "", params object[] becauseArgs)
+    {
+        return this.Monitor.Should().Raise(eventName, because, becauseArgs);
     }
 }
 
