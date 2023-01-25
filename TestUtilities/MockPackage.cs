@@ -239,8 +239,15 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
                 this.AddMock(typeof(TTarget), targetMock);
             }
 
-            this.Monitor = targetMock.Object.Monitor();
+            try
+            {
+                this.Monitor = targetMock.Object.Monitor();
 
+            }
+            catch (InvalidOperationException e)
+            {
+                Debug.WriteLine(e.ToString());
+            }
             return targetMock;
         }
     }
@@ -463,7 +470,7 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
 
     public IMonitor<TTarget> Monitor
     {
-        get => _monitor ??= this.Target.Monitor();
+        get => _monitor;
         private set => _monitor = value;
     }
 
