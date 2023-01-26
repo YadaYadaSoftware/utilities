@@ -346,6 +346,11 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
     {
         if (Marshal.GetExceptionCode() != 0) return;
         this.Verify();
+        if (this.Target is IDisposable targetDisposable) targetDisposable.Dispose();
+        foreach (var serviceDescriptor in this._descriptors)
+        {
+            (serviceDescriptor.ImplementationInstance as IDisposable)?.Dispose();
+        }
     }
 
 
