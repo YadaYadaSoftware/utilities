@@ -15,7 +15,6 @@ public class FakeS3Client : IAmazonS3
     public DirectoryInfo BaseDirectory { get; }
     public void Dispose()
     {
-        throw new NotImplementedException();
     }
 
     public string GeneratePreSignedURL(string bucketName, string objectKey, DateTime expiration, IDictionary<string, object> additionalProperties)
