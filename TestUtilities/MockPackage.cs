@@ -349,7 +349,15 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
         if (this.Target is IDisposable targetDisposable) targetDisposable.Dispose();
         foreach (var serviceDescriptor in this._descriptors)
         {
-            (serviceDescriptor.ImplementationInstance as IDisposable)?.Dispose();
+            try
+            {
+                (serviceDescriptor.ImplementationInstance as IDisposable)?.Dispose();
+
+            }
+            catch (MockException e) when( e.Message.Contains("Dispose") && e.Message.Contains("Strict"))
+            {
+                // ignore
+            }
         }
     }
 
