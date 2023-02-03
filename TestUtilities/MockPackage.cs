@@ -52,10 +52,10 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
         }
     }
 
-    private Mock? CreateMock(Type mockOfType)
+    private Mock CreateMock(Type mockOfType)
     {
 
-        Mock? returnValue = null;
+        Mock returnValue = null;
 
         var mockType = typeof(Mock<>).MakeGenericType(mockOfType);
 
@@ -63,7 +63,7 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
         {
             lock (activateLock)
             {
-                returnValue = (Mock) Activator.CreateInstance(mockType);
+                returnValue = (Mock) Activator.CreateInstance(mockType)!;
             }
         }
         else
@@ -255,7 +255,7 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
     public TTarget Target => this.TargetMock.Object;
 
     protected readonly IServiceCollection _descriptors = new ServiceCollection();
-    private readonly Dictionary<Type, Mock?> _mocks = new Dictionary<Type, Mock?>();
+    private readonly Dictionary<Type, Mock> _mocks = new();
     private IMonitor<TTarget>? _monitor;
 
     public void AddMock(Type mockOf, Mock? mock)
@@ -272,26 +272,21 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
 
 
 
-    public Mock? GetMock([NotNull] Type mockType)
+    public Mock GetMock([NotNull] Type mockType)
     {
         if (mockType == null) throw new ArgumentNullException(nameof(mockType));
 
-        ServiceDescriptor descriptor = this._descriptors.SingleOrDefault(d => d.ServiceType == mockType);
+        if (this._descriptors.SingleOrDefault(d => d.ServiceType == mockType) is { } descriptor) return this._mocks[mockType];
 
-
-        if (descriptor == null)
-        {
-            var mock = this.CreateMock(mockType);
-            mock.CallBase = true;
-            this.AddMock(mockType, mock);
-        }
-
+        var mock = this.CreateMock(mockType);
+        mock.CallBase = true;
+        this.AddMock(mockType, mock);
 
         return this._mocks[mockType];
 
     }
 
-    public Mock<TMock>? GetMock<TMock>() where TMock : class
+    public Mock<TMock> GetMock<TMock>() where TMock : class
     {
         return (Mock<TMock>)this.GetMock(typeof(TMock));
 
