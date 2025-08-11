@@ -1,4 +1,5 @@
 ﻿using Amazon.Runtime;
+using Amazon.Runtime.Endpoints;
 using Amazon.S3;
 using Amazon.S3.Model;
 
@@ -84,6 +85,11 @@ public class FakeS3Client : IAmazonS3
         throw new NotImplementedException();
     }
 
+    public Task<string> GetPreSignedURLAsync(GetPreSignedUrlRequest request)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<AbortMultipartUploadResponse> AbortMultipartUploadAsync(string bucketName, string key, string uploadId,
         CancellationToken cancellationToken = new CancellationToken())
     {
@@ -136,6 +142,17 @@ public class FakeS3Client : IAmazonS3
         throw new NotImplementedException();
     }
 
+    public Task<CreateBucketMetadataTableConfigurationResponse> CreateBucketMetadataTableConfigurationAsync(CreateBucketMetadataTableConfigurationRequest request,
+        CancellationToken cancellationToken = new CancellationToken())
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<CreateSessionResponse> CreateSessionAsync(CreateSessionRequest request, CancellationToken cancellationToken = new CancellationToken())
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<DeleteBucketResponse> DeleteBucketAsync(string bucketName, CancellationToken cancellationToken = new CancellationToken())
     {
         throw new NotImplementedException();
@@ -165,6 +182,12 @@ public class FakeS3Client : IAmazonS3
     }
 
     public Task<DeleteBucketInventoryConfigurationResponse> DeleteBucketInventoryConfigurationAsync(DeleteBucketInventoryConfigurationRequest request,
+        CancellationToken cancellationToken = new CancellationToken())
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<DeleteBucketMetadataTableConfigurationResponse> DeleteBucketMetadataTableConfigurationAsync(DeleteBucketMetadataTableConfigurationRequest request,
         CancellationToken cancellationToken = new CancellationToken())
     {
         throw new NotImplementedException();
@@ -340,6 +363,12 @@ public class FakeS3Client : IAmazonS3
     }
 
     public Task<GetBucketLoggingResponse> GetBucketLoggingAsync(GetBucketLoggingRequest request,
+        CancellationToken cancellationToken = new CancellationToken())
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<GetBucketMetadataTableConfigurationResponse> GetBucketMetadataTableConfigurationAsync(GetBucketMetadataTableConfigurationRequest request,
         CancellationToken cancellationToken = new CancellationToken())
     {
         throw new NotImplementedException();
@@ -538,6 +567,11 @@ public class FakeS3Client : IAmazonS3
         throw new NotImplementedException();
     }
 
+    public Task<HeadBucketResponse> HeadBucketAsync(HeadBucketRequest request, CancellationToken cancellationToken = new CancellationToken())
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<InitiateMultipartUploadResponse> InitiateMultipartUploadAsync(string bucketName, string key,
         CancellationToken cancellationToken = new CancellationToken())
     {
@@ -580,6 +614,12 @@ public class FakeS3Client : IAmazonS3
     }
 
     public Task<ListBucketsResponse> ListBucketsAsync(ListBucketsRequest request, CancellationToken cancellationToken = new CancellationToken())
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<ListDirectoryBucketsResponse> ListDirectoryBucketsAsync(ListDirectoryBucketsRequest request,
+        CancellationToken cancellationToken = new CancellationToken())
     {
         throw new NotImplementedException();
     }
@@ -889,6 +929,11 @@ public class FakeS3Client : IAmazonS3
 
     public Task<WriteGetObjectResponseResponse> WriteGetObjectResponseAsync(WriteGetObjectResponseRequest request,
         CancellationToken cancellationToken = new CancellationToken())
+    {
+        throw new NotImplementedException();
+    }
+
+    public Endpoint DetermineServiceOperationEndpoint(AmazonWebServiceRequest request)
     {
         throw new NotImplementedException();
     }
