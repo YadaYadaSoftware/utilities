@@ -288,8 +288,16 @@ public class MockPackage<TTarget> : IServiceProvider, IDisposable, IServiceColle
 
     public Mock<TMock> GetMock<TMock>() where TMock : class
     {
-        return (Mock<TMock>)this.GetMock(typeof(TMock));
+        try
+        {
+            return (Mock<TMock>)this.GetMock(typeof(TMock));
 
+        }
+        catch (Exception ex)
+        {
+
+            throw new TypeLoadException($"Error creating mock of {typeof(TMock).FullName}", ex);
+        }
     }
 
     public object GetFake(Type fakeType)
